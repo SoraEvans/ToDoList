@@ -91,6 +91,9 @@ body {
 
 .btn-action:focus {
     outline: none !important;
+}
+
+.btn-action:active {
     background-color: #c5cace;
     opacity: 0.3;
 }
