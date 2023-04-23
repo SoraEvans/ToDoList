@@ -4,6 +4,7 @@ html, body {
 
 body {
     max-width: 800px;
+    height: auto;
     margin: 0 auto;
     width: 100%;
     background-color: #E4E5E7;
@@ -28,6 +29,12 @@ body {
 .task-title {
     font-weight: 400;
     padding-top: 5px;
+    overflow: auto;
+    white-space: nowrap;
+}
+
+.task-title::-webkit-scrollbar {
+display: none;
 }
 
 .gray {
@@ -146,4 +153,8 @@ button:hover {
 
 .card-header:first-child {
     border-radius: 0.25rem;
+}
+
+.pagination {
+    width: fit-content;
 }
