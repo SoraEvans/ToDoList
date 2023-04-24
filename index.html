@@ -11,15 +11,10 @@
 
 	<div class="container">
 
-		<div class="display-4 mb-2">ToDo приложение</div>
+		<div class="display-4 mb-2">Just Do It!</div>
 		<div class="h4 mb-5">список задач на сегодня</div>
 
 		<!-- Form -->
-		<div id="listStatus">
-			<button value="Все задачи">Все задачи</button>
-			<button value="Готовые">Готовые</button>
-			<button value="Не готовые">Не готовые</button>
-		</div>
 		<div>
 			<div class="card card-header">Добавить новую задачу</div>
 			<div class="card card-body mb-4">
@@ -27,11 +22,17 @@
 					<div class="form-group">
 						<input type="text" class="form-control" id="taskInput" placeholder="Текст задачи" required>
 						<button type="submit" class="btn active">Добавить</button>
+					</div>
 				</form>
 			</div>
 		</div>
 		<!-- Form -->
 
+		<div id="listStatus">
+			<button class="statusTab activeStatus" value="Все задачи">Все задачи</button>
+			<button class="statusTab" value="Готовые">Готовые</button>
+			<button class="statusTab" value="Не готовые">Не готовые</button>
+		</div>
 		<!-- List of tasks -->
 		<div class="card">
 			<ul id="tasksList" class="list-group list-group-flush">
@@ -61,8 +62,8 @@
 		</div>
 		<ul class="pagination"></ul>
 		<!-- //List of tasks -->
-     <div id="removeBtn"></div>
 
+		<div id="removeBtn"></div>
 	</div>
 
 	<script src="js/main.js"></script>

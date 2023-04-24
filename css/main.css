@@ -8,7 +8,7 @@ body {
     margin: 0 auto;
     width: 100%;
     background-color: #E4E5E7;
-    padding-top: 30px;
+    padding: 30px 0;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -136,6 +136,12 @@ button {
     margin-left: 10px;
 }
 
+.btn:active {
+    box-shadow: none;
+    background-color: #46a457 !important;
+    border-color: #46a457 !important;
+}
+
 button:hover {
     background-color: #4baf5c !important;
     border-color: #4baf5c !important;
@@ -147,14 +153,72 @@ button:hover {
 }
 
 .card-header {
-    background-color: rgba(255, 255, 255, 0.69);
-    border: none !important;
+    background-color: #f0f1f6;
+    border: 1px solid #dee2e6;
 }
 
 .card-header:first-child {
-    border-radius: 0.25rem;
+    border-radius: 0 0.25rem 0.25rem;
 }
 
 .pagination {
     width: fit-content;
+}
+
+#listStatus {
+    display: flex;
+    width: fit-content;
+}
+
+.statusTab {
+    cursor: pointer;
+    display: block;
+    border-collapse: separate;
+    padding: 0.5rem 0.75rem;
+    line-height: 1.25;
+    color: #000000;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem 0.25rem 0 0;
+}
+
+.statusTab:hover:not(.activeStatus) {
+    background-color: #f0f1f6 !important;
+    border: 1px solid #dee2e6!important;
+}
+
+.statusTab:focus {
+    color: white;
+    background-color: #4baf5c !important;
+    border-color: #4baf5c !important;
+    outline: none;
+}
+
+.activeStatus {
+    color: white;
+    background-color: #4baf5c !important;
+    border-color: #4baf5c !important;
+    outline: none;
+}
+
+.page-link {
+    color: #000000;
+}
+
+.page-link:hover {
+    color: #4baf5c;
+}
+
+.page-link:active {
+    box-shadow: none;
+}
+
+.page-item.active .page-link {
+    background-color: #4baf5c;
+    border-color: #4baf5c;
+}
+
+.form-control:focus {
+    border-color: rgba(125, 224, 142, 0.56);
+    box-shadow: 0 0 0 0.1rem rgba(125, 224, 142, 0.56);
 }

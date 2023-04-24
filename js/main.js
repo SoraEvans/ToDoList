@@ -2,7 +2,6 @@ const form = document.querySelector("#form");
 const taskInput = document.querySelector("#taskInput");
 const tasksList = document.querySelector("#tasksList");
 const paginationList = document.querySelector(".pagination");
-const removeTasks = document.querySelector("#removeTasks");
 const listStatus = document.querySelector("#listStatus");
 const removeBtn = document.querySelector("#removeBtn");
 
@@ -11,9 +10,10 @@ let actualTasks = [];
 let filteredTasks = [];
 const elementsOnPage = 5;
 let page = 1;
+let countOfPages = 1;
+let savedStatus = 'Все задачи';
 
 const renderTask = (navigate) => {
-    const savedStatus = localStorage.getItem('listStatus');
     if (savedStatus === 'Готовые') {
         filteredTasks = allTasks.filter(task => task.done);
     } else if (savedStatus === 'Не готовые') {
@@ -22,7 +22,7 @@ const renderTask = (navigate) => {
         filteredTasks = allTasks;
     }
 
-    const countOfPages = Math.ceil(filteredTasks.length / elementsOnPage)
+    countOfPages = Math.ceil(filteredTasks.length / elementsOnPage)
     if (page > countOfPages && countOfPages !== 0) {
         page = countOfPages
     }
@@ -36,9 +36,26 @@ const renderTask = (navigate) => {
 
     actualTasks = filteredTasks.slice(start, end);
 
-    const pagesHTML = pages.map((_, i) => `<li class="page-item ${+page === i + 1 && 'active'}">
-                                                         <a class="page-link" href="#">${i + 1}</a>
-                                                         </li>`)
+    const pagesHTML = pages.map((_, i) =>
+        `<li class="page-item ${+page === i + 1 && 'active'}">
+         <a class="page-link" href="#">${i + 1}</a>
+         </li>`);
+
+    const disableLeftArrow = +page === 1;
+    const disableRightArrow = +page === countOfPages;
+
+    pagesHTML.unshift(`<li class="page-item ${disableLeftArrow && 'disabled'}">
+                              <a class="page-link" href="#" aria-label="Previous" tabindex="${disableRightArrow && "-1"}">
+                                 &laquo;
+                              </a>
+                             </li>`);
+
+    pagesHTML.push(`<li class="page-item ${disableRightArrow && 'disabled'}">
+                    <a class="page-link" href="#" aria-label="Next" tabindex="${disableRightArrow && "-1"}">
+                       &raquo;
+                    </a>
+                    </li>`);
+
     paginationList.innerHTML = countOfPages <= 1 ? '' : pagesHTML.join('')
 
     const taskHTML = actualTasks.map(task => {
@@ -56,16 +73,23 @@ const renderTask = (navigate) => {
         </li>`
     })
     tasksList.innerHTML = taskHTML.join('');
-
-    const removeBtnHTML = `<button id="removeTasks" class="btn btn-secondary float-right">
+    const removeBtnHTML = `<button id="removeTasks" class="btn float-right">
                          Удалить ${savedStatus.toLowerCase()}
                          </button>`
     removeBtn.innerHTML = filteredTasks.length ? removeBtnHTML : '';
+
+    document.querySelector("#removeTasks")
+        ?.addEventListener('click', () => {
+            localStorage.removeItem('allTasks'); //todo Логика удаления по табам
+            allTasks = [];
+            renderTask();
+            checkEmptyList();
+        });
 }
 
 if (localStorage.getItem('allTasks')) {
     allTasks = JSON.parse(localStorage.getItem('allTasks'));
-    renderTask()
+    renderTask();
 }
 
 const saveToLocalStorage = () => {
@@ -138,17 +162,22 @@ form.addEventListener('submit', addTask);
 tasksList.addEventListener('click', deleteTask);
 tasksList.addEventListener('click', doneTask);
 paginationList.addEventListener('click', (event) => {
-    page = (event.target.text)
-    renderTask(true)
+    if (event.target.className.includes('disabled')) return;
+        if (event.target.text.trim() === '«') {
+            page = 1;
+        } else if (event.target.text.trim() === '»') {
+            page = countOfPages;
+        } else {
+            page = (event.target.text);
+        }
+    renderTask(true);
 });
-removeTasks?.addEventListener('click', () => { //todo ПОЧИНИТЬ
-    localStorage.removeItem('allTasks');
-    allTasks = [];
-    renderTask();
-    checkEmptyList();
-})
+
 listStatus.addEventListener('click', (event) => {
-    localStorage.setItem('listStatus', event.target.value);
+    savedStatus = event.target.value;
+    listStatus.querySelector('.activeStatus').classList.remove('activeStatus');
+    event.target.classList.toggle('activeStatus');
     renderTask();
     checkEmptyList();
 });
+
