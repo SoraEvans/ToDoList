@@ -22,6 +22,24 @@ const renderTask = (navigate) => {
         filteredTasks = allTasks;
     }
 
+    const doneStatus = document.querySelector('#doneStatus');
+    const notDoneStatus = document.querySelector('#notDoneStatus');
+
+    if (allTasks.length) {
+        doneStatus.classList.remove('disable');
+        notDoneStatus.classList.remove('disable');
+        doneStatus.removeAttribute('disabled');
+        notDoneStatus.removeAttribute('disabled');
+    } else {
+        doneStatus.classList.add('disable');
+        notDoneStatus.classList.add('disable');
+        doneStatus.setAttribute('disabled', 'true');
+        notDoneStatus.setAttribute('disabled', 'true');
+        savedStatus = 'Все задачи';
+        listStatus.querySelector('.activeStatus').classList.remove('activeStatus');
+        document.querySelector('#allStatus').classList.add('activeStatus');
+    }
+
     countOfPages = Math.ceil(filteredTasks.length / elementsOnPage)
     if (page > countOfPages && countOfPages !== 0) {
         page = countOfPages
@@ -80,8 +98,17 @@ const renderTask = (navigate) => {
 
     document.querySelector("#removeTasks")
         ?.addEventListener('click', () => {
-            localStorage.removeItem('allTasks'); //todo Логика удаления по табам
-            allTasks = [];
+            if (savedStatus === 'Готовые') {
+                allTasks = allTasks.filter(item => (!item.done))
+                localStorage.setItem('allTasks', JSON.stringify(allTasks));
+            } else if (savedStatus === 'Не готовые') {
+                allTasks = allTasks.filter(item => (item.done))
+                localStorage.setItem('allTasks', JSON.stringify(allTasks));
+            } else {
+                allTasks = [];
+                localStorage.removeItem('allTasks')
+            }
+
             renderTask();
             checkEmptyList();
         });
@@ -90,10 +117,12 @@ const renderTask = (navigate) => {
 if (localStorage.getItem('allTasks')) {
     allTasks = JSON.parse(localStorage.getItem('allTasks'));
     renderTask();
+} else {
+    renderTask();
 }
 
 const saveToLocalStorage = () => {
-    localStorage.setItem('allTasks', JSON.stringify(allTasks));
+    localStorage.setItem('allTasks', JSON.stringify(allTasks)); //todo ?????
 }
 
 const checkEmptyList = () => {
@@ -154,6 +183,9 @@ const doneTask = (event) => {
 
     const taskTitle = parentNode.querySelector(".task-title");
     taskTitle.classList.toggle('task-title--done');
+
+    renderTask(true);
+    checkEmptyList();
 }
 
 checkEmptyList();
@@ -163,17 +195,18 @@ tasksList.addEventListener('click', deleteTask);
 tasksList.addEventListener('click', doneTask);
 paginationList.addEventListener('click', (event) => {
     if (event.target.className.includes('disabled')) return;
-        if (event.target.text.trim() === '«') {
-            page = 1;
-        } else if (event.target.text.trim() === '»') {
-            page = countOfPages;
-        } else {
-            page = (event.target.text);
-        }
+    if (event.target.text.trim() === '«') {
+        page = 1;
+    } else if (event.target.text.trim() === '»') {
+        page = countOfPages;
+    } else {
+        page = (event.target.text);
+    }
     renderTask(true);
 });
 
 listStatus.addEventListener('click', (event) => {
+    if (savedStatus === event.target.value) return
     savedStatus = event.target.value;
     listStatus.querySelector('.activeStatus').classList.remove('activeStatus');
     event.target.classList.toggle('activeStatus');
