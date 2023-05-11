@@ -1,4 +1,4 @@
-# Todo JS
+# Todo on JS
 
 ## Todo application
 
