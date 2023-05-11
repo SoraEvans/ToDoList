@@ -1,5 +1,6 @@
 # Todo JS
 
-## Todo list приложение.
+## Todo application
 
-### Создано на Vanilla JS. Опробовать можно на сайте https://soraevans.github.io/todo-js_practice/
+#### Stack: HTML/CSS/Vanilla JS
+#### Project: https://soraevans.github.io/todo-js_practice
